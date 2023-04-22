@@ -9,46 +9,50 @@ const Thumb = ({ photo }) => {
     target: ref,
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], [-100, 100]);
+  const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
-    <div style={containerStyle} ref={ref}>
+    <div className="gallery__item" ref={ref}>
       <motion.div style={{ y }}>
         <motion.div
           initial={false}
           animate={isInView ? styleWhenInView : styleWhenOutOfView}
           viewport={{ once: false, margin: "20px" }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
           onViewportEnter={() => setIsInView(true)}
           onViewportLeave={() => setIsInView(false)}
         >
-          <img
-            width="200px"
-            key={photo.id}
-            src={photo.urls.small}
-            alt={photo.alt_description}
-          />
-          <span>{photo.alt_description}</span>
+          <div className="gallery__card">
+            <div className="gallery__image-box">
+              <img
+                className="gallery__image"
+                key={photo.id}
+                src={photo.urls.thumb}
+                alt={photo.alt_description}
+              />
+            </div>
+            <span className="gallery__image-caption">
+              {photo.alt_description}
+            </span>
+          </div>
         </motion.div>
       </motion.div>
     </div>
   );
 };
 
-const containerStyle = {
-  transform: "translateY(100px)",
-};
-
 const styleWhenInView = {
   y: 0,
   opacity: 1,
+  scale: 1,
   filter: "blur(0em)",
 };
 
 const styleWhenOutOfView = {
   y: 20,
+  scale: 0.9,
   opacity: 0,
-  filter: "blur(1em)",
+  filter: "blur(.5em)",
 };
 
 export default Thumb;

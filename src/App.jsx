@@ -5,10 +5,12 @@ import Thumb from "./components/Thumb";
 const App = () => {
   const [value, setValue] = useState("");
   const [photos, setPhotos] = useState([]);
+  const [page, setPage] = useState(1);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const results = await searchPhotos(value);
+    console.log(results);
     setPhotos(results);
   };
 
@@ -18,6 +20,9 @@ const App = () => {
     return <Thumb key={photo.id} photo={photo} />;
   });
 
+  // Hack to get useScroll in gallery images to
+  // update the scroll progress when all images
+  // are loaded
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       window.dispatchEvent(new CustomEvent("scroll"));
@@ -27,8 +32,8 @@ const App = () => {
   }, []);
 
   return (
-    <div>
-      <header style={headerStyle}>
+    <div className="wrapper">
+      <header className="header">
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -38,30 +43,11 @@ const App = () => {
         </form>
       </header>
 
-      <div ref={ref} style={gridStyle}>
+      <div className="gallery" ref={ref}>
         {imageThumbnails}
       </div>
     </div>
   );
-};
-
-const gridStyle = {
-  marginTop: "50px",
-  width: "100%",
-  columns: "6 200px",
-  columnGap: "5px",
-};
-
-const headerStyle = {
-  zIndex: 1000,
-  width: "100%",
-  display: "flex",
-  alignItems: "center",
-  position: "fixed",
-  top: 0,
-  height: "50px",
-  backgroundColor: "#ffffff99",
-  backdropFilter: "blur(2em)",
 };
 
 export default App;
