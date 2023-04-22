@@ -1,10 +1,11 @@
 import api from "./api";
 
-const searchPhotos = async (term) => {
+const searchPhotos = async (query) => {
   const response = await api.get("/search/photos", {
     params: {
-      query: term,
+      query: query.term,
       per_page: 30,
+      page: query.page,
     },
   });
 

@@ -1,28 +1,49 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import searchPhotos from "./api/searchPhotos";
 import Thumb from "./components/Thumb";
 
 const App = () => {
   const [value, setValue] = useState("");
   const [photos, setPhotos] = useState([]);
-  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState({ term: "", page: 1 });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const results = await searchPhotos(value);
-    console.log(results);
-    setPhotos(results);
+    if (value === "") {
+      setPhotos([]);
+    }
+    setQuery({ term: value, page: 1 });
   };
 
-  const ref = useRef();
+  const handleClick = () => {
+    setQuery((oldQuery) => {
+      const newQuery = { ...oldQuery, page: oldQuery.page + 1 };
+      return newQuery;
+    });
+  };
 
-  const imageThumbnails = photos.map((photo) => {
-    return <Thumb key={photo.id} photo={photo} />;
-  });
+  const fetchPhotos = useCallback(async () => {
+    //TODO: use form validation
+    if (query.term === "") {
+      return;
+    }
+    const results = await searchPhotos(query);
+    setPhotos((oldPhotos) => {
+      if (query.page === 1) {
+        return results;
+      }
+      return [...oldPhotos, ...results];
+    });
+  }, [query]);
+
+  useEffect(() => {
+    fetchPhotos();
+  }, [fetchPhotos]);
 
   // Hack to get useScroll in gallery images to
   // update the scroll progress when all images
   // are loaded
+  const ref = useRef();
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       window.dispatchEvent(new CustomEvent("scroll"));
@@ -31,11 +52,16 @@ const App = () => {
     observer.observe(ref.current);
   }, []);
 
+  const imageThumbnails = photos.map((photo) => {
+    return <Thumb key={photo.id} photo={photo} />;
+  });
+
   return (
     <div className="wrapper">
       <header className="header">
-        <form onSubmit={handleSubmit}>
+        <form className="search" onSubmit={handleSubmit}>
           <input
+            className="search__input"
             type="text"
             value={value}
             onChange={(e) => setValue(e.target.value)}
@@ -44,7 +70,17 @@ const App = () => {
       </header>
 
       <div className="gallery" ref={ref}>
-        {imageThumbnails}
+        <div className="gallery__content">{imageThumbnails}</div>
+        <div className="gallery__footer">
+          <p className="gallery__footer-text">
+            {!!photos.length && "This is the end of the gallery."}
+          </p>
+          {!!photos.length && (
+            <button className="button" onClick={handleClick}>
+              Load More
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
