@@ -4,6 +4,7 @@ const searchPhotos = async (term) => {
   const response = await api.get("/search/photos", {
     params: {
       query: term,
+      per_page: 30,
     },
   });
 
