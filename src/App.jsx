@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import searchPhotos from "./api/searchPhotos";
-import Thumb from "./components/Thumb";
+import GalleryItem from "./components/GalleryItem";
 import Masonry from "@mui/lab/Masonry";
-import useDebounce from "./hooks/useDebounce";
-import { LayoutGroup } from "framer-motion";
 
 const App = () => {
   const [value, setValue] = useState("");
@@ -45,7 +43,7 @@ const App = () => {
   }, [fetchPhotos]);
 
   const imageThumbnails = photos.map((photo) => {
-    return <Thumb key={photo.id} photo={photo} />;
+    return <GalleryItem key={photo.id} photo={photo} />;
   });
 
   const handleResize = ([e]) => {
@@ -76,7 +74,7 @@ const App = () => {
       <div className="gallery" ref={onGalleryRefChange}>
         <div className="gallery__content">
           <Masonry columns={numColumns} spacing={2}>
-            <LayoutGroup>{imageThumbnails}</LayoutGroup>
+            {imageThumbnails}
           </Masonry>
         </div>
         <div className="gallery__footer">

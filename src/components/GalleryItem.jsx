@@ -1,35 +1,20 @@
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
 
-const Thumb = ({ photo, ...rest }) => {
+const GalleryItem = ({ photo }) => {
   const [isInView, setIsInView] = useState(false);
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   const ref = useRef();
+
   const { scrollYProgress } = useScroll({
     target: ref,
   });
-
   const y = useTransform(scrollYProgress, [0, 1], [0, 100]);
-
-  const getEstimateSpanSize = (size) => {
-    return size > 240 ? 2 : 1;
-  };
-
-  const handleLoad = ({ target: img }) => {
-    setDimensions({ width: img.naturalWidth, height: img.naturalHeight });
-  };
+  const physics = { damping: 30, mass: 0.27, stiffness: 500 };
 
   return (
-    <div
-      style={{
-        gridColumnEnd: `span ${getEstimateSpanSize(dimensions.height)}`,
-        gridRowEnd: `span ${getEstimateSpanSize(dimensions.width)}`,
-      }}
-      className="gallery__item"
-      ref={ref}
-    >
-      <motion.div style={{ y }}>
+    <div className="gallery__item" ref={ref}>
+      <motion.div style={{ y: useSpring(y, physics) }}>
         <motion.div
           initial={false}
           animate={isInView ? styleWhenInView : styleWhenOutOfView}
@@ -44,7 +29,6 @@ const Thumb = ({ photo, ...rest }) => {
                 key={photo.id}
                 src={photo.urls.thumb}
                 alt={photo.alt_description}
-                onLoad={handleLoad}
               />
             </div>
             <span className="gallery__image-caption">
@@ -71,4 +55,4 @@ const styleWhenOutOfView = {
   filter: "blur(.5em)",
 };
 
-export default Thumb;
+export default GalleryItem;

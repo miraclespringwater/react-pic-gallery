@@ -1,13 +1,13 @@
 # React Photo Search With Axios and Framer Motion
 
 ## Layout
-- [ ] Header fixed to top
-- [ ] Header with backdrop filter
-- [ ] Parallax scroll
+- [X] Header fixed to top
+- [X] Header with backdrop filter
+- [X] Parallax scroll
 
 ## What I Want To Happen When We Search
 - [ ] Loading icon appears
-- [ ] Images fade in from bottom
+- [X] Images fade in from bottom
 - [ ] Scroll progress bar appears
 - [ ] When scrolling to bottom, more pictures are loaded
 - [ ] When more pictures are loading, scroll progress bar reflects this
@@ -21,3 +21,4 @@
 
 ## Other
 - [ ] Smooth and springy scrolling
+- [ ] Smooth height expansion when loading new images
