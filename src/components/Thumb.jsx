@@ -36,7 +36,6 @@ const Thumb = ({ photo, ...rest }) => {
           viewport={{ once: true, margin: "20px" }}
           transition={{ duration: 0.3, delay: 0.1 }}
           onViewportEnter={() => setIsInView(true)}
-        // onViewportLeave={() => setIsInView(false)}
         >
           <div className="gallery__card">
             <div className="gallery__image-box">
