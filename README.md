@@ -22,3 +22,5 @@
 ## Other
 - [ ] Smooth and springy scrolling
 - [ ] Smooth height expansion when loading new images
+- [ ] Light/dark mode switch
+- [ ] Refactor to useContext+useReducer
